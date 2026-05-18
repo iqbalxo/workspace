@@ -1,0 +1,39 @@
+---
+description: AI systems, retrieval, and orchestration guidance
+alwaysApply: true
+---
+
+# AI System Principles
+
+- Prioritize reliability, grounding, and observability.
+- Minimize hallucinations.
+- Keep prompts structured and deterministic.
+- Keep orchestration explicit and understandable.
+- Avoid uncontrolled autonomous loops.
+- Include source attribution when applicable.
+- Log important workflow steps.
+
+# Retrieval-Augmented Generation
+
+- Separate ingestion, chunking, embedding, retrieval, and generation.
+- Store metadata alongside chunks.
+- Retrieve only relevant context.
+- Use reasonable chunk overlap.
+- Return source references when applicable.
+- If context is insufficient, avoid unsupported claims.
+
+# Agentic Workflow Guidelines
+
+- Keep responsibilities narrow and well-defined.
+- Prefer deterministic flows before autonomous behavior.
+- Make state transitions explicit.
+- Add retry/error handling for tool calls.
+- Avoid unnecessary multi-agent complexity.
+- Design systems to be easy to debug and test.
+
+# API Integration
+
+- Use environment variables for secrets.
+- Keep API calls wrapped in reusable functions.
+- Avoid hardcoding credentials.
+- Handle API failures gracefully.

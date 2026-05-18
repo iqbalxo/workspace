@@ -1,0 +1,41 @@
+---
+description: Architecture and project organization guidelines
+alwaysApply: true
+---
+
+# Architecture Style
+
+- Use clean separation of concerns.
+- Keep structures simple and scalable.
+- Prefer modular services over deeply nested abstractions.
+- Make request and data flow easy to follow.
+- Avoid framework-heavy solutions unless necessary.
+
+# Preferred Python Structure
+
+Prefer structures like:
+
+app/
+  api/
+  services/
+  retrieval/
+  agents/
+  models/
+  utils/
+  main.py
+
+# Development Order
+
+1. Build the simplest working path.
+2. Validate components independently.
+3. Add error handling.
+4. Add observability/logging.
+5. Refactor only when clarity improves.
+
+# Recommended Defaults
+
+- Python-first.
+- FastAPI for APIs.
+- ChromaDB for lightweight vector storage.
+- Environment-based configuration.
+- Clear README instructions.

@@ -1,0 +1,68 @@
+---
+description: Review, quality, and validation workflows
+alwaysApply: true
+---
+
+# Quality Workflow
+
+Before considering a feature complete:
+
+1. Check whether the implementation satisfies the stated requirement.
+2. Identify missing edge cases.
+3. Look for unnecessary complexity.
+4. Check for hardcoded secrets, unsafe inputs, and fragile assumptions.
+5. Suggest the smallest useful improvement.
+6. Provide simple validation steps.
+
+# Self-Review
+
+When asked to review code:
+
+- Review correctness first.
+- Then review simplicity.
+- Then review security.
+- Then review performance.
+- Then review maintainability.
+- Do not nitpick unnecessarily.
+- Prioritize issues that could break functionality.
+
+# Security Review
+
+Check for:
+
+- Hardcoded API keys or secrets.
+- Unsafe file handling.
+- Unsanitized user input.
+- Overly permissive CORS.
+- Missing error handling around external APIs.
+- Exposed stack traces.
+- Prompt injection risks in AI workflows.
+- Untrusted retrieved context being treated as instructions.
+
+# Performance Review
+
+Check for:
+
+- Repeated unnecessary API calls.
+- Missing caching opportunities.
+- Inefficient document chunking.
+- Excessive context passed to LLMs.
+- Blocking operations in API routes.
+- Poor separation between ingestion-time and query-time work.
+
+# AI Workflow Review
+
+For RAG and agentic systems, verify:
+
+- The system has a clear data flow.
+- Retrieved context is separated from system instructions.
+- The model is told not to guess when context is insufficient.
+- Source metadata is preserved.
+- Tool/agent responsibilities are narrow.
+- Logs make debugging possible.
+- Failure modes are handled gracefully.
+
+# Refactoring Rule
+
+Only refactor when it improves clarity, reliability, or debuggability.
+Avoid large rewrites unless the current structure is blocking progress.

@@ -1,0 +1,31 @@
+---
+description: Development workflow and implementation conventions
+alwaysApply: true
+---
+
+# Implementation Workflow
+
+When implementing features:
+
+1. Explain the approach briefly.
+2. Generate only the necessary code.
+3. Keep changes scoped and modular.
+4. Avoid unrelated rewrites.
+5. Mention assumptions where relevant.
+6. Include simple validation/testing steps.
+
+# Debugging Workflow
+
+1. Identify likely root causes.
+2. Suggest the fastest validation steps.
+3. Apply the smallest effective fix.
+4. Explain why the issue occurred.
+5. Avoid unnecessary architectural changes.
+
+# System Design Workflow
+
+1. Start with the MVP.
+2. Identify core components.
+3. Recommend implementation order.
+4. Highlight tradeoffs.
+5. Prefer maintainable solutions.

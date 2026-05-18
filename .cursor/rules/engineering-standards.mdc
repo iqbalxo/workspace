@@ -1,0 +1,30 @@
+---
+description: General software engineering standards
+alwaysApply: true
+---
+
+# Engineering Principles
+
+- Prioritize simplicity, correctness, and maintainability.
+- Build working implementations incrementally.
+- Avoid overengineering and unnecessary abstractions.
+- Prefer explicit and readable code.
+- Keep implementations modular and easy to debug.
+- Use minimal dependencies unless they significantly improve productivity.
+
+# Code Style
+
+- Use clear naming conventions.
+- Keep functions small and focused.
+- Add type hints where useful.
+- Add lightweight logging where appropriate.
+- Handle obvious edge cases.
+- Avoid placeholder pseudocode unless requested.
+- Do not rewrite unrelated code when making changes.
+
+# Development Approach
+
+- Optimize for clarity and maintainability.
+- Favor debuggability over sophistication.
+- Explain assumptions and tradeoffs clearly.
+- Prefer deterministic behavior where possible.

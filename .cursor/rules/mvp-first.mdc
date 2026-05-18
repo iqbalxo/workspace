@@ -1,0 +1,12 @@
+---
+description: prioritize MVP implementation
+alwaysApply: true
+---
+
+# MVP First
+
+- Build working functionality before optimization.
+- Prefer explicit code over abstractions.
+- Keep implementations interview-friendly.
+- Avoid unnecessary architecture complexity.
+- Finish core functionality before polishing.
