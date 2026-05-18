@@ -1,0 +1,42 @@
+[
+  {
+    "approved": false,
+    "issues": [
+      "grounding",
+      "clarity",
+      "escalation alignment"
+    ],
+    "suggested_fix": "Ensure the response references all relevant policy IDs (P4 is missing). Rephrase for clarity by specifying the escalation will ensure a quicker resolution. Provide a clear expectation for the customer regarding the escalation process.",
+    "ticket_id": "T1"
+  },
+  {
+    "approved": false,
+    "issues": [
+      "Grounding: The draft only cites policy ID P2, while additional policy IDs P1 and P5 were retrieved and should also support the response. This could affect the response's foundation in policy.",
+      "Clarity: The statement about not promising a refund before investigation lacks specificity and may confuse the customer about the timeline and process.",
+      "Escalation Handling: Though the escalation note is included, the response does not actively indicate that the issue is being escalated."
+    ],
+    "suggested_fix": "Enhance grounding by citing policies P1 and P5 along with P2. Clarify the investigation process and timeline regarding the refund. Explicitly inform the customer that the matter will be escalated for review.",
+    "ticket_id": "T2"
+  },
+  {
+    "approved": false,
+    "issues": [
+      "Grounding: The response cites policies P3 and P5, but it lacks specific reference to the policy that outlines the prohibition of manual account approvals, which is crucial for grounding.",
+      "Clarity: The message states the request will be escalated but does not provide clear next steps or timelines for the customer.",
+      "Escalation Handling: While the request is appropriately escalated, the reasoning for not manually approving the account could be better articulated for clarity."
+    ],
+    "suggested_fix": "Revise the response to clearly state the relevant policy regarding manual approval (e.g., mention that P4 prohibits manual approvals), provide a brief overview of what the escalation entails and when the customer can expect an update.",
+    "ticket_id": "T3"
+  },
+  {
+    "approved": false,
+    "issues": [
+      "Grounding: The response lacks reference to all retrieved policy IDs, specifically P3.",
+      "Clarity: The explanation about what happens after the account is closed could be clearer.",
+      "Escalation Handling: While escalation is mentioned, more details on what the user can expect after escalation would enhance the response."
+    ],
+    "suggested_fix": "Include reference to all relevant policy IDs (P4, P5, P3) in the response. Clarify what will happen to the user's funds after account closure and include information on what to expect during the escalation process.",
+    "ticket_id": "T4"
+  }
+]

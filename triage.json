@@ -1,0 +1,34 @@
+[
+  {
+    "category": "withdrawal_issue",
+    "missing_information": [],
+    "priority": "medium",
+    "reason": "Withdrawal pending for an extended period requires account-specific investigation.",
+    "should_escalate": true,
+    "ticket_id": "T1"
+  },
+  {
+    "category": "payment_issue",
+    "missing_information": [],
+    "priority": "high",
+    "reason": "Refund resolution requires payment investigation.",
+    "should_escalate": true,
+    "ticket_id": "T2"
+  },
+  {
+    "category": "verification_issue",
+    "missing_information": [],
+    "priority": "high",
+    "reason": "Customer asked for manual approval, which requires an account-specific investigation.",
+    "should_escalate": true,
+    "ticket_id": "T3"
+  },
+  {
+    "category": "account_closure",
+    "missing_information": [],
+    "priority": "high",
+    "reason": "Request implies irreversible action requiring confirmation.",
+    "should_escalate": true,
+    "ticket_id": "T4"
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "category": "withdrawal_issue",
+    "final_status": "needs_human_review",
+    "notes": [
+      "triage_reason:Withdrawal pending for an extended period requires account-specific investigation.",
+      "triage_requires_escalation",
+      "draft_escalation_note:Withdrawal pending for an extended period requires account-specific investigation.",
+      "review_approved:False",
+      "review_issue:grounding",
+      "review_issue:clarity",
+      "review_issue:escalation alignment",
+      "review_suggested_fix:Ensure the response references all relevant policy IDs (P4 is missing). Rephrase for clarity by specifying the escalation will ensure a quicker resolution. Provide a clear expectation for the customer regarding the escalation process.",
+      "check_passed:True",
+      "final_status_reason:needs_human_review"
+    ],
+    "priority": "medium",
+    "reply": "Dear Amina,\n\nThank you for reaching out. I understand your concern regarding the pending withdrawal. Withdrawals are typically processed within 1-3 business days depending on various factors such as the payment method and verification status. Unfortunately, I cannot promise any acceleration of the process at this time.\n\nSince your withdrawal has been pending for an extended period, I will escalate this matter for further review to ensure it is addressed promptly.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support",
+    "supporting_policy_ids": [
+      "P1",
+      "P5"
+    ],
+    "ticket_id": "T1"
+  },
+  {
+    "category": "payment_issue",
+    "final_status": "needs_human_review",
+    "notes": [
+      "triage_reason:Refund resolution requires payment investigation.",
+      "triage_requires_escalation",
+      "draft_escalation_note:Refund resolution requires payment investigation.",
+      "review_approved:False",
+      "review_issue:Grounding: The draft only cites policy ID P2, while additional policy IDs P1 and P5 were retrieved and should also support the response. This could affect the response's foundation in policy.",
+      "review_issue:Clarity: The statement about not promising a refund before investigation lacks specificity and may confuse the customer about the timeline and process.",
+      "review_issue:Escalation Handling: Though the escalation note is included, the response does not actively indicate that the issue is being escalated.",
+      "review_suggested_fix:Enhance grounding by citing policies P1 and P5 along with P2. Clarify the investigation process and timeline regarding the refund. Explicitly inform the customer that the matter will be escalated for review.",
+      "check_passed:True",
+      "final_status_reason:needs_human_review"
+    ],
+    "priority": "high",
+    "reply": "Hi Jon,\n\nThank you for reaching out regarding the charges on your card statement. It's possible that your card provider may show temporary duplicate authorisations. To assist you further, could you please provide the transaction date, the last four digits of the card used, the amount charged, and a screenshot of the transaction if available?\n\nPlease note that we cannot promise a refund before conducting a full payment investigation.\n\nThank you for your understanding!\n\nBest regards,\nCustomer Support",
+    "supporting_policy_ids": [
+      "P2"
+    ],
+    "ticket_id": "T2"
+  },
+  {
+    "category": "verification_issue",
+    "final_status": "needs_human_review",
+    "notes": [
+      "triage_reason:Customer asked for manual approval, which requires an account-specific investigation.",
+      "triage_requires_escalation",
+      "draft_escalation_note:Manual approval requires an account-specific investigation, so this issue has been escalated.",
+      "review_approved:False",
+      "review_issue:Grounding: The response cites policies P3 and P5, but it lacks specific reference to the policy that outlines the prohibition of manual account approvals, which is crucial for grounding.",
+      "review_issue:Clarity: The message states the request will be escalated but does not provide clear next steps or timelines for the customer.",
+      "review_issue:Escalation Handling: While the request is appropriately escalated, the reasoning for not manually approving the account could be better articulated for clarity.",
+      "review_suggested_fix:Revise the response to clearly state the relevant policy regarding manual approval (e.g., mention that P4 prohibits manual approvals), provide a brief overview of what the escalation entails and when the customer can expect an update.",
+      "check_passed:True",
+      "final_status_reason:needs_human_review"
+    ],
+    "priority": "high",
+    "reply": "Thank you for your patience, Sara. I understand the urgency of your situation. However, identity verification is handled through our established workflow, and I am unable to manually approve your account. Expecting review times can vary. I will escalate your request to ensure it's prioritized.",
+    "supporting_policy_ids": [
+      "P3",
+      "P5"
+    ],
+    "ticket_id": "T3"
+  },
+  {
+    "category": "account_closure",
+    "final_status": "needs_human_review",
+    "notes": [
+      "triage_reason:Request implies irreversible action requiring confirmation.",
+      "triage_requires_escalation",
+      "draft_escalation_note:The request requires escalation due to its irreversible nature and the need for confirmation.",
+      "review_approved:False",
+      "review_issue:Grounding: The response lacks reference to all retrieved policy IDs, specifically P3.",
+      "review_issue:Clarity: The explanation about what happens after the account is closed could be clearer.",
+      "review_issue:Escalation Handling: While escalation is mentioned, more details on what the user can expect after escalation would enhance the response.",
+      "review_suggested_fix:Include reference to all relevant policy IDs (P4, P5, P3) in the response. Clarify what will happen to the user's funds after account closure and include information on what to expect during the escalation process.",
+      "check_passed:True",
+      "final_status_reason:needs_human_review"
+    ],
+    "priority": "high",
+    "reply": "To close your account, you need to withdraw any available funds and resolve any open positions or pending obligations. Since this is an irreversible action, we will need to confirm your request before proceeding. I will escalate your request to the appropriate team to ensure everything is handled correctly.",
+    "supporting_policy_ids": [
+      "P4",
+      "P5"
+    ],
+    "ticket_id": "T4"
+  }
+]

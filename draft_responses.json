@@ -1,0 +1,41 @@
+[
+  {
+    "cited_policy_ids": [
+      "P1",
+      "P5"
+    ],
+    "escalation_note": "Withdrawal pending for an extended period requires account-specific investigation.",
+    "reply": "Dear Amina,\n\nThank you for reaching out. I understand your concern regarding the pending withdrawal. Withdrawals are typically processed within 1-3 business days depending on various factors such as the payment method and verification status. Unfortunately, I cannot promise any acceleration of the process at this time.\n\nSince your withdrawal has been pending for an extended period, I will escalate this matter for further review to ensure it is addressed promptly.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support",
+    "subject": "Withdrawal still pending after 3 days",
+    "ticket_id": "T1"
+  },
+  {
+    "cited_policy_ids": [
+      "P2"
+    ],
+    "escalation_note": "Refund resolution requires payment investigation.",
+    "reply": "Hi Jon,\n\nThank you for reaching out regarding the charges on your card statement. It's possible that your card provider may show temporary duplicate authorisations. To assist you further, could you please provide the transaction date, the last four digits of the card used, the amount charged, and a screenshot of the transaction if available?\n\nPlease note that we cannot promise a refund before conducting a full payment investigation.\n\nThank you for your understanding!\n\nBest regards,\nCustomer Support",
+    "subject": "I was charged twice",
+    "ticket_id": "T2"
+  },
+  {
+    "cited_policy_ids": [
+      "P3",
+      "P5"
+    ],
+    "escalation_note": "Manual approval requires an account-specific investigation, so this issue has been escalated.",
+    "reply": "Thank you for your patience, Sara. I understand the urgency of your situation. However, identity verification is handled through our established workflow, and I am unable to manually approve your account. Expecting review times can vary. I will escalate your request to ensure it's prioritized.",
+    "subject": "Can you verify my account now?",
+    "ticket_id": "T3"
+  },
+  {
+    "cited_policy_ids": [
+      "P4",
+      "P5"
+    ],
+    "escalation_note": "The request requires escalation due to its irreversible nature and the need for confirmation.",
+    "reply": "To close your account, you need to withdraw any available funds and resolve any open positions or pending obligations. Since this is an irreversible action, we will need to confirm your request before proceeding. I will escalate your request to the appropriate team to ensure everything is handled correctly.",
+    "subject": "How do I close my account?",
+    "ticket_id": "T4"
+  }
+]

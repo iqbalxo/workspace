@@ -1,0 +1,38 @@
+[
+  {
+    "ranking_explanation": "P1:score=25(token_overlap=2,tag_overlap=1); P4:score=13(token_overlap=2,tag_overlap=0); P5:score=0(token_overlap=0,tag_overlap=0)",
+    "retrieved_policy_ids": [
+      "P1",
+      "P4",
+      "P5"
+    ],
+    "ticket_id": "T1"
+  },
+  {
+    "ranking_explanation": "P2:score=62(token_overlap=4,tag_overlap=3); P1:score=7(token_overlap=0,tag_overlap=0); P5:score=0(token_overlap=0,tag_overlap=0)",
+    "retrieved_policy_ids": [
+      "P2",
+      "P1",
+      "P5"
+    ],
+    "ticket_id": "T2"
+  },
+  {
+    "ranking_explanation": "P3:score=37(token_overlap=3,tag_overlap=0); P4:score=11(token_overlap=2,tag_overlap=1); P5:score=3(token_overlap=1,tag_overlap=0)",
+    "retrieved_policy_ids": [
+      "P3",
+      "P4",
+      "P5"
+    ],
+    "ticket_id": "T3"
+  },
+  {
+    "ranking_explanation": "P4:score=43(token_overlap=4,tag_overlap=2); P5:score=16(token_overlap=3,tag_overlap=0); P3:score=10(token_overlap=1,tag_overlap=0)",
+    "retrieved_policy_ids": [
+      "P4",
+      "P5",
+      "P3"
+    ],
+    "ticket_id": "T4"
+  }
+]
