@@ -1,3 +1,4 @@
+from support_pipeline.artifact_store import JsonArtifactStore
 from support_pipeline.contracts import (
     ArtifactStore,
     CheckService,
@@ -7,6 +8,8 @@ from support_pipeline.contracts import (
     StageTracker,
     TriageService,
 )
+from support_pipeline.pipeline import BootstrapArtifacts, PhaseOneBootstrapRunner
+from support_pipeline.stage_tracker import OrderedStageTracker, StageTransitionError
 from support_pipeline.types import (
     DraftResponse,
     FinalResponse,
@@ -22,18 +25,23 @@ from support_pipeline.types import (
 
 __all__ = [
     "ArtifactStore",
+    "BootstrapArtifacts",
     "CheckService",
     "DraftingService",
     "DraftResponse",
     "FinalResponse",
+    "JsonArtifactStore",
     "LLMCallRecord",
+    "OrderedStageTracker",
     "PipelineStage",
     "Policy",
+    "PhaseOneBootstrapRunner",
     "ResponseCheck",
     "RetrievalResult",
     "RetrievalService",
     "ReviewResult",
     "ReviewService",
+    "StageTransitionError",
     "StageTracker",
     "Ticket",
     "TriageResult",

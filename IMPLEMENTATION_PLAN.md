@@ -67,7 +67,17 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 
 ## Phased Implementation Plan
 
-### Phase 1: Core Skeleton and Contracts
+## Progress Tracker
+
+- [x] Phase 1: Core Skeleton and Contracts
+- [ ] Phase 2: Stage 1 Triage
+- [ ] Phase 3: Deterministic Policy Retrieval
+- [ ] Phase 4: Stage 2 Drafting
+- [ ] Phase 5: Deterministic Checks
+- [ ] Phase 6: Final Response Pack
+- [ ] Phase 7 (Nice-to-Have): Reviewer + Validator
+
+### Phase 1: Core Skeleton and Contracts (Done)
 
 - Define typed schemas for:
   - ticket
