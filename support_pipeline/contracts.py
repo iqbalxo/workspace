@@ -15,6 +15,7 @@ from support_pipeline.types import (
     TriageResult,
 )
 from support_pipeline.drafting import DraftingRules
+from support_pipeline.response_checks import ResponseCheckRules
 
 
 class ArtifactStore(Protocol):
@@ -88,6 +89,7 @@ class CheckService(Protocol):
         triage: TriageResult,
         retrieval: RetrievalResult,
         draft: DraftResponse,
+        rules: ResponseCheckRules,
     ) -> ResponseCheck:
         ...
 

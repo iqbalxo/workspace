@@ -1,0 +1,10 @@
+{
+  "banned_phrases": [
+    "guarantee",
+    "definitely",
+    "will be approved today",
+    "refund today"
+  ],
+  "min_reply_chars": 40,
+  "require_escalation_note_when_escalated": true
+}

@@ -6,9 +6,21 @@ from pathlib import Path
 from support_pipeline.artifact_store import JsonArtifactStore
 from support_pipeline.drafting import DraftingInput, DraftingRulesLoader, DraftingStageRunner
 from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
+from support_pipeline.response_checks import (
+    ResponseCheckInput,
+    ResponseCheckRulesLoader,
+    ResponseCheckStageRunner,
+)
 from support_pipeline.stage_tracker import OrderedStageTracker
 from support_pipeline.triage import TriageRulesLoader, TriageStageRunner
-from support_pipeline.types import PipelineStage, Policy, RetrievalResult, Ticket, TriageResult
+from support_pipeline.types import (
+    DraftResponse,
+    PipelineStage,
+    Policy,
+    RetrievalResult,
+    Ticket,
+    TriageResult,
+)
 
 
 @dataclass(frozen=True)
@@ -142,7 +154,7 @@ class PhaseFourDraftingRunner:
         drafts_artifact_path: Path,
         llm_calls_artifact_path: Path,
         input_artifacts: list[str],
-    ) -> None:
+    ) -> list[DraftResponse]:
         rules = DraftingRulesLoader.from_file(rules_path)
         triage_by_ticket = {item.ticket_id: item for item in triage_records}
         retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
@@ -164,7 +176,7 @@ class PhaseFourDraftingRunner:
                 )
             )
 
-        self._drafting_runner.run(
+        drafting_result = self._drafting_runner.run(
             inputs=drafting_inputs,
             rules=rules,
             draft_artifact_path=drafts_artifact_path,
@@ -172,3 +184,48 @@ class PhaseFourDraftingRunner:
             input_artifacts=input_artifacts,
         )
         self._stage_tracker.transition_to(PipelineStage.RESPONSE_DRAFTED)
+        return drafting_result.records
+
+
+class PhaseFiveResponseCheckRunner:
+    """Phase 5 runner for deterministic validation over drafted replies."""
+
+    def __init__(
+        self,
+        stage_tracker: OrderedStageTracker,
+        check_runner: ResponseCheckStageRunner,
+    ) -> None:
+        self._stage_tracker = stage_tracker
+        self._check_runner = check_runner
+
+    def run(
+        self,
+        tickets: list[Ticket],
+        triage_records: list[TriageResult],
+        retrieval_records: list[RetrievalResult],
+        draft_records: list[DraftResponse],
+        rules_path: Path,
+        checks_artifact_path: Path,
+    ) -> None:
+        rules = ResponseCheckRulesLoader.from_file(rules_path)
+        triage_by_ticket = {item.ticket_id: item for item in triage_records}
+        retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
+        draft_by_ticket = {item.ticket_id: item for item in draft_records}
+
+        inputs: list[ResponseCheckInput] = []
+        for ticket in tickets:
+            inputs.append(
+                ResponseCheckInput(
+                    ticket=ticket,
+                    triage=triage_by_ticket[ticket.ticket_id],
+                    retrieval=retrieval_by_ticket[ticket.ticket_id],
+                    draft=draft_by_ticket[ticket.ticket_id],
+                )
+            )
+
+        self._check_runner.run(
+            inputs=inputs,
+            rules=rules,
+            checks_artifact_path=checks_artifact_path,
+        )
+        self._stage_tracker.transition_to(PipelineStage.RESPONSE_CHECKED)

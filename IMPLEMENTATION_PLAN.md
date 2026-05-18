@@ -73,7 +73,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - [x] Phase 2: Stage 1 Triage
 - [x] Phase 3: Deterministic Policy Retrieval
 - [x] Phase 4: Stage 2 Drafting
-- [ ] Phase 5: Deterministic Checks
+- [x] Phase 5: Deterministic Checks
 - [ ] Phase 6: Final Response Pack
 - [ ] Phase 7 (Nice-to-Have): Reviewer + Validator
 
@@ -116,7 +116,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - Save `draft_responses.json`.
 - Log each drafting call to `llm_calls.jsonl`.
 
-### Phase 5: Deterministic Checks
+### Phase 5: Deterministic Checks (Done)
 
 - Validate each draft for:
   - missing citations
