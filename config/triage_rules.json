@@ -1,0 +1,16 @@
+{
+  "categories": [
+    "withdrawal_issue",
+    "payment_issue",
+    "verification_issue",
+    "account_closure",
+    "other"
+  ],
+  "escalation_rules": [
+    "Escalate when account-specific investigation is required.",
+    "Escalate when the customer asks for manual approval or process bypass.",
+    "Escalate when refund or card charge resolution requires payment investigation.",
+    "Escalate when request implies irreversible action requiring confirmation.",
+    "Do not escalate for purely informational questions unless risk is unclear."
+  ]
+}

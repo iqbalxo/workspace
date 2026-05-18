@@ -70,7 +70,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 ## Progress Tracker
 
 - [x] Phase 1: Core Skeleton and Contracts
-- [ ] Phase 2: Stage 1 Triage
+- [x] Phase 2: Stage 1 Triage
 - [ ] Phase 3: Deterministic Policy Retrieval
 - [ ] Phase 4: Stage 2 Drafting
 - [ ] Phase 5: Deterministic Checks
@@ -91,7 +91,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - Implement pipeline state machine and artifact writer.
 - Ensure reproducible JSON output formatting.
 
-### Phase 2: Stage 1 Triage
+### Phase 2: Stage 1 Triage (Done)
 
 - Build one-ticket-at-a-time triage prompt template.
 - Include ticket fields, categories, and escalation rules in each call.

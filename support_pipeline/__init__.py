@@ -8,8 +8,19 @@ from support_pipeline.contracts import (
     StageTracker,
     TriageService,
 )
-from support_pipeline.pipeline import BootstrapArtifacts, PhaseOneBootstrapRunner
+from support_pipeline.pipeline import (
+    BootstrapArtifacts,
+    PhaseOneBootstrapRunner,
+    PhaseTwoTriageRunner,
+)
 from support_pipeline.stage_tracker import OrderedStageTracker, StageTransitionError
+from support_pipeline.triage import (
+    OpenRouterTriageService,
+    TriageRules,
+    TriageRulesLoader,
+    TriageStageResult,
+    TriageStageRunner,
+)
 from support_pipeline.types import (
     DraftResponse,
     FinalResponse,
@@ -36,6 +47,8 @@ __all__ = [
     "PipelineStage",
     "Policy",
     "PhaseOneBootstrapRunner",
+    "PhaseTwoTriageRunner",
+    "OpenRouterTriageService",
     "ResponseCheck",
     "RetrievalResult",
     "RetrievalService",
@@ -45,5 +58,9 @@ __all__ = [
     "StageTracker",
     "Ticket",
     "TriageResult",
+    "TriageRules",
+    "TriageRulesLoader",
+    "TriageStageResult",
+    "TriageStageRunner",
     "TriageService",
 ]
