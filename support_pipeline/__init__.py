@@ -11,8 +11,10 @@ from support_pipeline.contracts import (
 from support_pipeline.pipeline import (
     BootstrapArtifacts,
     PhaseOneBootstrapRunner,
+    PhaseThreeRetrievalRunner,
     PhaseTwoTriageRunner,
 )
+from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
 from support_pipeline.stage_tracker import OrderedStageTracker, StageTransitionError
 from support_pipeline.triage import (
     OpenRouterTriageService,
@@ -39,6 +41,7 @@ __all__ = [
     "BootstrapArtifacts",
     "CheckService",
     "DraftingService",
+    "DeterministicRetrievalService",
     "DraftResponse",
     "FinalResponse",
     "JsonArtifactStore",
@@ -47,10 +50,12 @@ __all__ = [
     "PipelineStage",
     "Policy",
     "PhaseOneBootstrapRunner",
+    "PhaseThreeRetrievalRunner",
     "PhaseTwoTriageRunner",
     "OpenRouterTriageService",
     "ResponseCheck",
     "RetrievalResult",
+    "RetrievalStageResult",
     "RetrievalService",
     "ReviewResult",
     "ReviewService",

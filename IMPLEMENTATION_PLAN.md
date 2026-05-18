@@ -71,7 +71,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 
 - [x] Phase 1: Core Skeleton and Contracts
 - [x] Phase 2: Stage 1 Triage
-- [ ] Phase 3: Deterministic Policy Retrieval
+- [x] Phase 3: Deterministic Policy Retrieval
 - [ ] Phase 4: Stage 2 Drafting
 - [ ] Phase 5: Deterministic Checks
 - [ ] Phase 6: Final Response Pack
@@ -99,7 +99,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - Save `triage.json`.
 - Append one `llm_calls.jsonl` entry per triage call.
 
-### Phase 3: Deterministic Policy Retrieval
+### Phase 3: Deterministic Policy Retrieval (Done)
 
 - Tokenize ticket text and policy text/tags deterministically.
 - Score and rank policies (top 2-3).

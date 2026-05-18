@@ -60,7 +60,12 @@ class TriageService(Protocol):
 
 
 class RetrievalService(Protocol):
-    def retrieve_for_ticket(self, ticket: Ticket, policies: Sequence[Policy]) -> RetrievalResult:
+    def retrieve_for_ticket(
+        self,
+        ticket: Ticket,
+        triage: TriageResult,
+        policies: Sequence[Policy],
+    ) -> RetrievalResult:
         ...
 
 

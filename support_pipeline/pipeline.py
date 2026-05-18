@@ -4,9 +4,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from support_pipeline.artifact_store import JsonArtifactStore
+from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
 from support_pipeline.stage_tracker import OrderedStageTracker
 from support_pipeline.triage import TriageRulesLoader, TriageStageRunner
-from support_pipeline.types import PipelineStage, Policy, Ticket
+from support_pipeline.types import PipelineStage, Policy, Ticket, TriageResult
 
 
 @dataclass(frozen=True)
@@ -69,9 +70,9 @@ class PhaseTwoTriageRunner:
         triage_artifact_path: Path,
         llm_calls_artifact_path: Path,
         input_artifacts: list[str],
-    ) -> None:
+    ) -> list[TriageResult]:
         rules = TriageRulesLoader.from_file(rules_path)
-        self._triage_runner.run(
+        triage_output = self._triage_runner.run(
             tickets=tickets,
             rules=rules,
             triage_artifact_path=triage_artifact_path,
@@ -79,3 +80,41 @@ class PhaseTwoTriageRunner:
             input_artifacts=input_artifacts,
         )
         self._stage_tracker.transition_to(PipelineStage.TICKET_TRIAGED)
+        return triage_output.records
+
+
+class PhaseThreeRetrievalRunner:
+    """Phase 3 runner that performs deterministic policy retrieval."""
+
+    def __init__(
+        self,
+        stage_tracker: OrderedStageTracker,
+        artifact_store: JsonArtifactStore,
+        retrieval_service: DeterministicRetrievalService,
+    ) -> None:
+        self._stage_tracker = stage_tracker
+        self._artifact_store = artifact_store
+        self._retrieval_service = retrieval_service
+
+    def run(
+        self,
+        tickets: list[Ticket],
+        triage_records: list[TriageResult],
+        policies: list[Policy],
+        retrieval_artifact_path: Path,
+    ) -> RetrievalStageResult:
+        triage_by_ticket = {item.ticket_id: item for item in triage_records}
+        records = []
+        for ticket in tickets:
+            triage = triage_by_ticket[ticket.ticket_id]
+            records.append(
+                self._retrieval_service.retrieve_for_ticket(
+                    ticket=ticket,
+                    triage=triage,
+                    policies=policies,
+                )
+            )
+
+        self._artifact_store.write_retrieval(retrieval_artifact_path, records)
+        self._stage_tracker.transition_to(PipelineStage.EVIDENCE_RETRIEVED)
+        return RetrievalStageResult(records=records)
