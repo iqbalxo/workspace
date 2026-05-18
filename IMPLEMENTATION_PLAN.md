@@ -74,7 +74,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - [x] Phase 3: Deterministic Policy Retrieval
 - [x] Phase 4: Stage 2 Drafting
 - [x] Phase 5: Deterministic Checks
-- [ ] Phase 6: Final Response Pack
+- [x] Phase 6: Final Response Pack
 - [ ] Phase 7 (Nice-to-Have): Reviewer + Validator
 
 ### Phase 1: Core Skeleton and Contracts (Done)
@@ -126,7 +126,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
   - escalation mismatch with triage
 - Save `response_checks.json`.
 
-### Phase 6: Final Response Pack
+### Phase 6: Final Response Pack (Done)
 
 - Merge triage + retrieval + draft + check outputs.
 - Set `final_status`:

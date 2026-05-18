@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 
 from support_pipeline.artifact_store import JsonArtifactStore
 from support_pipeline.drafting import OpenRouterDraftingService, DraftingStageRunner
+from support_pipeline.finalization import DeterministicFinalizationRunner
 from support_pipeline.pipeline import (
     PhaseFiveResponseCheckRunner,
+    PhaseSixFinalizationRunner,
     PhaseFourDraftingRunner,
     PhaseOneBootstrapRunner,
     PhaseThreeRetrievalRunner,
@@ -20,7 +22,7 @@ from support_pipeline.stage_tracker import OrderedStageTracker
 from support_pipeline.triage import OpenRouterTriageService, TriageStageRunner
 
 
-def run_pipeline_until_checks(repo_root: Path) -> None:
+def run_pipeline_until_finalization(repo_root: Path) -> None:
     load_dotenv(repo_root / ".env")
     artifact_store = JsonArtifactStore()
     stage_tracker = OrderedStageTracker()
@@ -56,6 +58,10 @@ def run_pipeline_until_checks(repo_root: Path) -> None:
         stage_tracker=stage_tracker,
         check_runner=DeterministicResponseCheckRunner(artifact_store=artifact_store),
     )
+    phase_six = PhaseSixFinalizationRunner(
+        stage_tracker=stage_tracker,
+        finalization_runner=DeterministicFinalizationRunner(artifact_store=artifact_store),
+    )
 
     tickets_path = repo_root / "tickets.json"
     policy_kb_path = repo_root / "policy_kb.json"
@@ -66,6 +72,8 @@ def run_pipeline_until_checks(repo_root: Path) -> None:
     drafts_output_path = repo_root / "draft_responses.json"
     response_check_rules_path = repo_root / "config" / "response_check_rules.json"
     response_checks_output_path = repo_root / "response_checks.json"
+    finalization_rules_path = repo_root / "config" / "finalization_rules.json"
+    final_responses_output_path = repo_root / "final_responses.json"
     llm_calls_output_path = repo_root / "llm_calls.jsonl"
     if llm_calls_output_path.exists():
         llm_calls_output_path.unlink()
@@ -102,13 +110,21 @@ def run_pipeline_until_checks(repo_root: Path) -> None:
             str(drafting_rules_path),
         ],
     )
-    phase_five.run(
+    check_records = phase_five.run(
         tickets=artifacts.tickets,
         triage_records=triage_records,
         retrieval_records=retrieval_result.records,
         draft_records=draft_records,
         rules_path=response_check_rules_path,
         checks_artifact_path=response_checks_output_path,
+    )
+    phase_six.run(
+        triage_records=triage_records,
+        retrieval_records=retrieval_result.records,
+        draft_records=draft_records,
+        check_records=check_records,
+        rules_path=finalization_rules_path,
+        final_artifact_path=final_responses_output_path,
     )
 
     print(f"Current stage: {stage_tracker.current_stage.value}")
@@ -118,8 +134,9 @@ def run_pipeline_until_checks(repo_root: Path) -> None:
     print(f"Retrieval output: {retrieval_output_path.name}")
     print(f"Draft output: {drafts_output_path.name}")
     print(f"Response checks output: {response_checks_output_path.name}")
+    print(f"Final responses output: {final_responses_output_path.name}")
     print(f"LLM call log: {llm_calls_output_path.name}")
 
 
 if __name__ == "__main__":
-    run_pipeline_until_checks(repo_root=Path(__file__).resolve().parent)
+    run_pipeline_until_finalization(repo_root=Path(__file__).resolve().parent)

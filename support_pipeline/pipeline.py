@@ -5,6 +5,12 @@ from pathlib import Path
 
 from support_pipeline.artifact_store import JsonArtifactStore
 from support_pipeline.drafting import DraftingInput, DraftingRulesLoader, DraftingStageRunner
+from support_pipeline.finalization import (
+    FinalizationStageResult,
+    FinalizationInput,
+    FinalizationRulesLoader,
+    FinalizationStageRunner,
+)
 from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
 from support_pipeline.response_checks import (
     ResponseCheckInput,
@@ -17,6 +23,7 @@ from support_pipeline.types import (
     DraftResponse,
     PipelineStage,
     Policy,
+    ResponseCheck,
     RetrievalResult,
     Ticket,
     TriageResult,
@@ -206,7 +213,7 @@ class PhaseFiveResponseCheckRunner:
         draft_records: list[DraftResponse],
         rules_path: Path,
         checks_artifact_path: Path,
-    ) -> None:
+    ) -> list[ResponseCheck]:
         rules = ResponseCheckRulesLoader.from_file(rules_path)
         triage_by_ticket = {item.ticket_id: item for item in triage_records}
         retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
@@ -223,9 +230,56 @@ class PhaseFiveResponseCheckRunner:
                 )
             )
 
-        self._check_runner.run(
+        check_result = self._check_runner.run(
             inputs=inputs,
             rules=rules,
             checks_artifact_path=checks_artifact_path,
         )
         self._stage_tracker.transition_to(PipelineStage.RESPONSE_CHECKED)
+        return check_result.records
+
+
+class PhaseSixFinalizationRunner:
+    """Phase 6 runner for assembling final response pack."""
+
+    def __init__(
+        self,
+        stage_tracker: OrderedStageTracker,
+        finalization_runner: FinalizationStageRunner,
+    ) -> None:
+        self._stage_tracker = stage_tracker
+        self._finalization_runner = finalization_runner
+
+    def run(
+        self,
+        triage_records: list[TriageResult],
+        retrieval_records: list[RetrievalResult],
+        draft_records: list[DraftResponse],
+        check_records: list[ResponseCheck],
+        rules_path: Path,
+        final_artifact_path: Path,
+    ) -> FinalizationStageResult:
+        rules = FinalizationRulesLoader.from_file(rules_path)
+        triage_by_ticket = {item.ticket_id: item for item in triage_records}
+        retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
+        draft_by_ticket = {item.ticket_id: item for item in draft_records}
+
+        inputs: list[FinalizationInput] = []
+        for check in check_records:
+            ticket_id = check.ticket_id
+            inputs.append(
+                FinalizationInput(
+                    triage=triage_by_ticket[ticket_id],
+                    retrieval=retrieval_by_ticket[ticket_id],
+                    draft=draft_by_ticket[ticket_id],
+                    check=check,
+                )
+            )
+
+        final_result = self._finalization_runner.run(
+            inputs=inputs,
+            rules=rules,
+            final_artifact_path=final_artifact_path,
+        )
+        self._stage_tracker.transition_to(PipelineStage.RESPONSE_FINALISED)
+        return final_result

@@ -1,0 +1,5 @@
+{
+  "allow_ready_when_escalated_if_note_present": true,
+  "require_supporting_policy_ids": true,
+  "include_check_issues_in_notes": true
+}

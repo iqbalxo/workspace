@@ -5,6 +5,7 @@ from typing import Protocol, Sequence
 
 from support_pipeline.types import (
     DraftResponse,
+    FinalResponse,
     LLMCallRecord,
     PipelineStage,
     Policy,
@@ -15,6 +16,7 @@ from support_pipeline.types import (
     TriageResult,
 )
 from support_pipeline.drafting import DraftingRules
+from support_pipeline.finalization import FinalizationRules
 from support_pipeline.response_checks import ResponseCheckRules
 
 
@@ -102,4 +104,16 @@ class ReviewService(Protocol):
         retrieval: RetrievalResult,
         draft: DraftResponse,
     ) -> ReviewResult:
+        ...
+
+
+class FinalizationService(Protocol):
+    def finalize_response(
+        self,
+        triage: TriageResult,
+        retrieval: RetrievalResult,
+        draft: DraftResponse,
+        check: ResponseCheck,
+        rules: FinalizationRules,
+    ) -> FinalResponse:
         ...
