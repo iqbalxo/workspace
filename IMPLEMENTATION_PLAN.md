@@ -72,7 +72,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - [x] Phase 1: Core Skeleton and Contracts
 - [x] Phase 2: Stage 1 Triage
 - [x] Phase 3: Deterministic Policy Retrieval
-- [ ] Phase 4: Stage 2 Drafting
+- [x] Phase 4: Stage 2 Drafting
 - [ ] Phase 5: Deterministic Checks
 - [ ] Phase 6: Final Response Pack
 - [ ] Phase 7 (Nice-to-Have): Reviewer + Validator
@@ -106,7 +106,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - Ensure at least one tone/safety policy is included when relevant.
 - Save `retrieval_results.json` with ranking explanation.
 
-### Phase 4: Stage 2 Drafting
+### Phase 4: Stage 2 Drafting (Done)
 
 - For each ticket, call LLM using:
   - original ticket

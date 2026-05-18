@@ -4,10 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from support_pipeline.artifact_store import JsonArtifactStore
+from support_pipeline.drafting import DraftingInput, DraftingRulesLoader, DraftingStageRunner
 from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
 from support_pipeline.stage_tracker import OrderedStageTracker
 from support_pipeline.triage import TriageRulesLoader, TriageStageRunner
-from support_pipeline.types import PipelineStage, Policy, Ticket, TriageResult
+from support_pipeline.types import PipelineStage, Policy, RetrievalResult, Ticket, TriageResult
 
 
 @dataclass(frozen=True)
@@ -118,3 +119,56 @@ class PhaseThreeRetrievalRunner:
         self._artifact_store.write_retrieval(retrieval_artifact_path, records)
         self._stage_tracker.transition_to(PipelineStage.EVIDENCE_RETRIEVED)
         return RetrievalStageResult(records=records)
+
+
+class PhaseFourDraftingRunner:
+    """Phase 4 runner that drafts customer responses via one LLM call per ticket."""
+
+    def __init__(
+        self,
+        stage_tracker: OrderedStageTracker,
+        drafting_runner: DraftingStageRunner,
+    ) -> None:
+        self._stage_tracker = stage_tracker
+        self._drafting_runner = drafting_runner
+
+    def run(
+        self,
+        tickets: list[Ticket],
+        triage_records: list[TriageResult],
+        retrieval_records: list[RetrievalResult],
+        policy_index: dict[str, Policy],
+        rules_path: Path,
+        drafts_artifact_path: Path,
+        llm_calls_artifact_path: Path,
+        input_artifacts: list[str],
+    ) -> None:
+        rules = DraftingRulesLoader.from_file(rules_path)
+        triage_by_ticket = {item.ticket_id: item for item in triage_records}
+        retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
+        drafting_inputs: list[DraftingInput] = []
+
+        for ticket in tickets:
+            triage = triage_by_ticket[ticket.ticket_id]
+            retrieval = retrieval_by_ticket[ticket.ticket_id]
+            retrieved_policies = [
+                policy_index[policy_id]
+                for policy_id in retrieval.retrieved_policy_ids
+                if policy_id in policy_index
+            ]
+            drafting_inputs.append(
+                DraftingInput(
+                    ticket=ticket,
+                    triage=triage,
+                    retrieved_policies=retrieved_policies,
+                )
+            )
+
+        self._drafting_runner.run(
+            inputs=drafting_inputs,
+            rules=rules,
+            draft_artifact_path=drafts_artifact_path,
+            llm_calls_artifact_path=llm_calls_artifact_path,
+            input_artifacts=input_artifacts,
+        )
+        self._stage_tracker.transition_to(PipelineStage.RESPONSE_DRAFTED)

@@ -8,10 +8,19 @@ from support_pipeline.contracts import (
     StageTracker,
     TriageService,
 )
+from support_pipeline.drafting import (
+    DraftingInput,
+    DraftingRules,
+    DraftingRulesLoader,
+    DraftingStageResult,
+    DraftingStageRunner,
+    OpenRouterDraftingService,
+)
 from support_pipeline.pipeline import (
     BootstrapArtifacts,
     PhaseOneBootstrapRunner,
     PhaseThreeRetrievalRunner,
+    PhaseFourDraftingRunner,
     PhaseTwoTriageRunner,
 )
 from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
@@ -41,6 +50,12 @@ __all__ = [
     "BootstrapArtifacts",
     "CheckService",
     "DraftingService",
+    "DraftingInput",
+    "DraftingRulesLoader",
+    "DraftingRules",
+    "DraftingStageResult",
+    "DraftingStageRunner",
+    "OpenRouterDraftingService",
     "DeterministicRetrievalService",
     "DraftResponse",
     "FinalResponse",
@@ -50,6 +65,7 @@ __all__ = [
     "PipelineStage",
     "Policy",
     "PhaseOneBootstrapRunner",
+    "PhaseFourDraftingRunner",
     "PhaseThreeRetrievalRunner",
     "PhaseTwoTriageRunner",
     "OpenRouterTriageService",

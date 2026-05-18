@@ -1,0 +1,21 @@
+{
+  "tone_requirements": [
+    "Be polite and concise.",
+    "Use customer-facing language.",
+    "State clear next steps when escalation is needed."
+  ],
+  "prohibited_claims": [
+    "Do not guarantee outcomes.",
+    "Do not promise refunds before investigation.",
+    "Do not claim manual verification approval outside workflow.",
+    "Do not promise expedited processing unless policy explicitly supports it."
+  ],
+  "required_output_keys": [
+    "ticket_id",
+    "subject",
+    "reply",
+    "cited_policy_ids",
+    "escalation_note"
+  ],
+  "enforce_citation": true
+}

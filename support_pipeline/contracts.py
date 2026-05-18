@@ -14,6 +14,7 @@ from support_pipeline.types import (
     Ticket,
     TriageResult,
 )
+from support_pipeline.drafting import DraftingRules
 
 
 class ArtifactStore(Protocol):
@@ -75,6 +76,7 @@ class DraftingService(Protocol):
         ticket: Ticket,
         triage: TriageResult,
         retrieved_policies: Sequence[Policy],
+        rules: DraftingRules,
     ) -> DraftResponse:
         ...
 

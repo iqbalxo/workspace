@@ -5,7 +5,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from support_pipeline.artifact_store import JsonArtifactStore
+from support_pipeline.drafting import OpenRouterDraftingService, DraftingStageRunner
 from support_pipeline.pipeline import (
+    PhaseFourDraftingRunner,
     PhaseOneBootstrapRunner,
     PhaseThreeRetrievalRunner,
     PhaseTwoTriageRunner,
@@ -16,7 +18,7 @@ from support_pipeline.stage_tracker import OrderedStageTracker
 from support_pipeline.triage import OpenRouterTriageService, TriageStageRunner
 
 
-def run_pipeline_until_retrieval(repo_root: Path) -> None:
+def run_pipeline_until_drafting(repo_root: Path) -> None:
     load_dotenv(repo_root / ".env")
     artifact_store = JsonArtifactStore()
     stage_tracker = OrderedStageTracker()
@@ -39,12 +41,23 @@ def run_pipeline_until_retrieval(repo_root: Path) -> None:
         artifact_store=artifact_store,
         retrieval_service=DeterministicRetrievalService(),
     )
+    drafting_service = OpenRouterDraftingService(settings=settings)
+    drafting_stage_runner = DraftingStageRunner(
+        service=drafting_service,
+        artifact_store=artifact_store,
+    )
+    phase_four = PhaseFourDraftingRunner(
+        stage_tracker=stage_tracker,
+        drafting_runner=drafting_stage_runner,
+    )
 
     tickets_path = repo_root / "tickets.json"
     policy_kb_path = repo_root / "policy_kb.json"
     triage_rules_path = repo_root / "config" / "triage_rules.json"
     triage_output_path = repo_root / "triage.json"
     retrieval_output_path = repo_root / "retrieval_results.json"
+    drafting_rules_path = repo_root / "config" / "drafting_rules.json"
+    drafts_output_path = repo_root / "draft_responses.json"
     llm_calls_output_path = repo_root / "llm_calls.jsonl"
     if llm_calls_output_path.exists():
         llm_calls_output_path.unlink()
@@ -60,11 +73,26 @@ def run_pipeline_until_retrieval(repo_root: Path) -> None:
             str(triage_rules_path),
         ],
     )
-    phase_three.run(
+    retrieval_result = phase_three.run(
         tickets=artifacts.tickets,
         triage_records=triage_records,
         policies=artifacts.policies,
         retrieval_artifact_path=retrieval_output_path,
+    )
+    phase_four.run(
+        tickets=artifacts.tickets,
+        triage_records=triage_records,
+        retrieval_records=retrieval_result.records,
+        policy_index=artifacts.policy_index,
+        rules_path=drafting_rules_path,
+        drafts_artifact_path=drafts_output_path,
+        llm_calls_artifact_path=llm_calls_output_path,
+        input_artifacts=[
+            str(tickets_path),
+            str(triage_output_path),
+            str(retrieval_output_path),
+            str(drafting_rules_path),
+        ],
     )
 
     print(f"Current stage: {stage_tracker.current_stage.value}")
@@ -72,8 +100,9 @@ def run_pipeline_until_retrieval(repo_root: Path) -> None:
     print(f"Policies indexed: {len(artifacts.policy_index)}")
     print(f"Triage output: {triage_output_path.name}")
     print(f"Retrieval output: {retrieval_output_path.name}")
+    print(f"Draft output: {drafts_output_path.name}")
     print(f"LLM call log: {llm_calls_output_path.name}")
 
 
 if __name__ == "__main__":
-    run_pipeline_until_retrieval(repo_root=Path(__file__).resolve().parent)
+    run_pipeline_until_drafting(repo_root=Path(__file__).resolve().parent)
