@@ -8,7 +8,14 @@ from typing import Protocol
 from pydantic import BaseModel, Field, TypeAdapter
 
 from support_pipeline.artifact_store import JsonArtifactStore
-from support_pipeline.types import DraftResponse, FinalResponse, ResponseCheck, RetrievalResult, TriageResult
+from support_pipeline.types import (
+    DraftResponse,
+    FinalResponse,
+    ResponseCheck,
+    RetrievalResult,
+    ReviewResult,
+    TriageResult,
+)
 
 
 class FinalizationRules(BaseModel):
@@ -22,6 +29,7 @@ class FinalizationInput(BaseModel):
     retrieval: RetrievalResult
     draft: DraftResponse
     check: ResponseCheck
+    review: ReviewResult | None = None
 
 
 @dataclass(frozen=True)
@@ -82,6 +90,8 @@ class DeterministicFinalizationRunner:
     def _determine_final_status(self, item: FinalizationInput, rules: FinalizationRules) -> str:
         if not item.check.passed:
             return "needs_human_review"
+        if item.review is not None and not item.review.approved:
+            return "needs_human_review"
 
         if not item.triage.should_escalate:
             return "ready"
@@ -124,6 +134,12 @@ class DeterministicFinalizationRunner:
             notes.append(f"draft_escalation_note:{item.draft.escalation_note}")
         if rules.include_check_issues_in_notes and item.check.issues:
             notes.extend(f"check_issue:{issue}" for issue in item.check.issues)
+        if item.review is not None:
+            notes.append(f"review_approved:{item.review.approved}")
+            if item.review.issues:
+                notes.extend(f"review_issue:{issue}" for issue in item.review.issues)
+            if item.review.suggested_fix:
+                notes.append(f"review_suggested_fix:{item.review.suggested_fix}")
         notes.append(f"check_passed:{item.check.passed}")
         notes.append(f"final_status_reason:{final_status}")
         return notes

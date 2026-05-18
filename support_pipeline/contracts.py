@@ -17,6 +17,7 @@ from support_pipeline.types import (
 )
 from support_pipeline.drafting import DraftingRules
 from support_pipeline.finalization import FinalizationRules
+from support_pipeline.reviewer import ReviewerRules
 from support_pipeline.response_checks import ResponseCheckRules
 
 
@@ -103,6 +104,7 @@ class ReviewService(Protocol):
         triage: TriageResult,
         retrieval: RetrievalResult,
         draft: DraftResponse,
+        rules: ReviewerRules,
     ) -> ReviewResult:
         ...
 
@@ -114,6 +116,7 @@ class FinalizationService(Protocol):
         retrieval: RetrievalResult,
         draft: DraftResponse,
         check: ResponseCheck,
+        review: ReviewResult | None,
         rules: FinalizationRules,
     ) -> FinalResponse:
         ...

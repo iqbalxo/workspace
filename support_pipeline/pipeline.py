@@ -12,6 +12,7 @@ from support_pipeline.finalization import (
     FinalizationStageRunner,
 )
 from support_pipeline.retrieval import DeterministicRetrievalService, RetrievalStageResult
+from support_pipeline.reviewer import ReviewerInput, ReviewerRulesLoader, ReviewerStageRunner
 from support_pipeline.response_checks import (
     ResponseCheckInput,
     ResponseCheckRulesLoader,
@@ -25,6 +26,7 @@ from support_pipeline.types import (
     Policy,
     ResponseCheck,
     RetrievalResult,
+    ReviewResult,
     Ticket,
     TriageResult,
 )
@@ -256,6 +258,7 @@ class PhaseSixFinalizationRunner:
         retrieval_records: list[RetrievalResult],
         draft_records: list[DraftResponse],
         check_records: list[ResponseCheck],
+        review_records: list[ReviewResult] | None,
         rules_path: Path,
         final_artifact_path: Path,
     ) -> FinalizationStageResult:
@@ -263,6 +266,7 @@ class PhaseSixFinalizationRunner:
         triage_by_ticket = {item.ticket_id: item for item in triage_records}
         retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
         draft_by_ticket = {item.ticket_id: item for item in draft_records}
+        review_by_ticket = {item.ticket_id: item for item in (review_records or [])}
 
         inputs: list[FinalizationInput] = []
         for check in check_records:
@@ -273,6 +277,7 @@ class PhaseSixFinalizationRunner:
                     retrieval=retrieval_by_ticket[ticket_id],
                     draft=draft_by_ticket[ticket_id],
                     check=check,
+                    review=review_by_ticket.get(ticket_id),
                 )
             )
 
@@ -283,3 +288,49 @@ class PhaseSixFinalizationRunner:
         )
         self._stage_tracker.transition_to(PipelineStage.RESPONSE_FINALISED)
         return final_result
+
+
+class PhaseSevenReviewerRunner:
+    """Phase 7 runner contract for per-ticket reviewer stage."""
+
+    def __init__(
+        self,
+        reviewer_runner: ReviewerStageRunner,
+    ) -> None:
+        self._reviewer_runner = reviewer_runner
+
+    def run(
+        self,
+        tickets: list[Ticket],
+        triage_records: list[TriageResult],
+        retrieval_records: list[RetrievalResult],
+        draft_records: list[DraftResponse],
+        rules_path: Path,
+        review_artifact_path: Path,
+        llm_calls_artifact_path: Path,
+        input_artifacts: list[str],
+    ) -> list[ReviewResult]:
+        rules = ReviewerRulesLoader.from_file(rules_path)
+        triage_by_ticket = {item.ticket_id: item for item in triage_records}
+        retrieval_by_ticket = {item.ticket_id: item for item in retrieval_records}
+        draft_by_ticket = {item.ticket_id: item for item in draft_records}
+
+        inputs: list[ReviewerInput] = []
+        for ticket in tickets:
+            inputs.append(
+                ReviewerInput(
+                    ticket=ticket,
+                    triage=triage_by_ticket[ticket.ticket_id],
+                    retrieval=retrieval_by_ticket[ticket.ticket_id],
+                    draft=draft_by_ticket[ticket.ticket_id],
+                )
+            )
+
+        result = self._reviewer_runner.run(
+            inputs=inputs,
+            rules=rules,
+            review_artifact_path=review_artifact_path,
+            llm_calls_artifact_path=llm_calls_artifact_path,
+            input_artifacts=input_artifacts,
+        )
+        return result.records

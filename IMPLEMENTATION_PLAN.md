@@ -75,7 +75,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
 - [x] Phase 4: Stage 2 Drafting
 - [x] Phase 5: Deterministic Checks
 - [x] Phase 6: Final Response Pack
-- [ ] Phase 7 (Nice-to-Have): Reviewer + Validator
+- [x] Phase 7 (Nice-to-Have): Reviewer + Validator
 
 ### Phase 1: Core Skeleton and Contracts (Done)
 
@@ -134,7 +134,7 @@ Final outputs are generated only after triage, retrieval, drafting, and determin
   - otherwise `ready` (including escalation-safe replies where applicable)
 - Save `final_responses.json`.
 
-### Phase 7 (Nice-to-Have): Reviewer + Validator
+### Phase 7 (Nice-to-Have): Reviewer + Validator (Done)
 
 - Add per-ticket reviewer LLM stage and save `review_results.json`.
 - Integrate reviewer result into final review routing.

@@ -9,6 +9,7 @@ from support_pipeline.drafting import OpenRouterDraftingService, DraftingStageRu
 from support_pipeline.finalization import DeterministicFinalizationRunner
 from support_pipeline.pipeline import (
     PhaseFiveResponseCheckRunner,
+    PhaseSevenReviewerRunner,
     PhaseSixFinalizationRunner,
     PhaseFourDraftingRunner,
     PhaseOneBootstrapRunner,
@@ -16,6 +17,7 @@ from support_pipeline.pipeline import (
     PhaseTwoTriageRunner,
 )
 from support_pipeline.retrieval import DeterministicRetrievalService
+from support_pipeline.reviewer import OpenRouterReviewerService, OpenRouterReviewerStageRunner
 from support_pipeline.response_checks import DeterministicResponseCheckRunner
 from support_pipeline.settings import OpenRouterSettings
 from support_pipeline.stage_tracker import OrderedStageTracker
@@ -58,6 +60,12 @@ def run_pipeline_until_finalization(repo_root: Path) -> None:
         stage_tracker=stage_tracker,
         check_runner=DeterministicResponseCheckRunner(artifact_store=artifact_store),
     )
+    reviewer_service = OpenRouterReviewerService(settings=settings)
+    reviewer_stage_runner = OpenRouterReviewerStageRunner(
+        service=reviewer_service,
+        artifact_store=artifact_store,
+    )
+    phase_seven = PhaseSevenReviewerRunner(reviewer_runner=reviewer_stage_runner)
     phase_six = PhaseSixFinalizationRunner(
         stage_tracker=stage_tracker,
         finalization_runner=DeterministicFinalizationRunner(artifact_store=artifact_store),
@@ -72,6 +80,8 @@ def run_pipeline_until_finalization(repo_root: Path) -> None:
     drafts_output_path = repo_root / "draft_responses.json"
     response_check_rules_path = repo_root / "config" / "response_check_rules.json"
     response_checks_output_path = repo_root / "response_checks.json"
+    reviewer_rules_path = repo_root / "config" / "reviewer_rules.json"
+    review_results_output_path = repo_root / "review_results.json"
     finalization_rules_path = repo_root / "config" / "finalization_rules.json"
     final_responses_output_path = repo_root / "final_responses.json"
     llm_calls_output_path = repo_root / "llm_calls.jsonl"
@@ -118,11 +128,28 @@ def run_pipeline_until_finalization(repo_root: Path) -> None:
         rules_path=response_check_rules_path,
         checks_artifact_path=response_checks_output_path,
     )
+    review_records = phase_seven.run(
+        tickets=artifacts.tickets,
+        triage_records=triage_records,
+        retrieval_records=retrieval_result.records,
+        draft_records=draft_records,
+        rules_path=reviewer_rules_path,
+        review_artifact_path=review_results_output_path,
+        llm_calls_artifact_path=llm_calls_output_path,
+        input_artifacts=[
+            str(tickets_path),
+            str(triage_output_path),
+            str(retrieval_output_path),
+            str(drafts_output_path),
+            str(reviewer_rules_path),
+        ],
+    )
     phase_six.run(
         triage_records=triage_records,
         retrieval_records=retrieval_result.records,
         draft_records=draft_records,
         check_records=check_records,
+        review_records=review_records,
         rules_path=finalization_rules_path,
         final_artifact_path=final_responses_output_path,
     )
@@ -134,6 +161,7 @@ def run_pipeline_until_finalization(repo_root: Path) -> None:
     print(f"Retrieval output: {retrieval_output_path.name}")
     print(f"Draft output: {drafts_output_path.name}")
     print(f"Response checks output: {response_checks_output_path.name}")
+    print(f"Review output: {review_results_output_path.name}")
     print(f"Final responses output: {final_responses_output_path.name}")
     print(f"LLM call log: {llm_calls_output_path.name}")
 
